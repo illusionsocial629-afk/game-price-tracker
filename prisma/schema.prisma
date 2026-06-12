@@ -1,0 +1,101 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Admin {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  createdAt DateTime @default(now())
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  username  String?
+  password  String
+  avatarUrl String?
+  createdAt DateTime @default(now())
+
+  wishlists Wishlist[]
+}
+
+model Game {
+  id          String   @id @default(cuid())
+  title       String
+  slug        String   @unique
+  description String?
+  coverImage  String?
+  bannerImage String?
+  createdAt   DateTime @default(now())
+
+  prices    GamePrice[]
+  
+}
+
+model Store {
+  id         String   @id @default(cuid())
+  name       String
+  logo       String?
+  websiteUrl String?
+  createdAt  DateTime @default(now())
+
+  prices GamePrice[]
+}
+
+model GamePrice {
+  id              String   @id @default(cuid())
+  gameId          String
+  storeId         String
+  originalPrice   Float
+  discountedPrice Float
+  currency        String   @default("USD")
+  discountPercent Int      @default(0)
+  affiliateLink   String?
+  updatedAt       DateTime @updatedAt
+
+  game  Game  @relation(fields: [gameId], references: [id])
+  store Store @relation(fields: [storeId], references: [id])
+}
+
+model Wishlist {
+  id               String   @id @default(cuid())
+  userId           String
+  gameId           String
+  title            String
+  image            String?
+  cheapest         String?
+  source           String?
+  notifyOnDiscount Boolean  @default(true)
+  createdAt        DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@unique([userId, gameId])
+}
+
+model Notification {
+  id        String   @id @default(cuid())
+  userId    String?
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+}
+
+model CachedGame {
+  id          String   @id @default(cuid())
+  rawgId      Int      @unique
+  slug        String   @unique
+  title       String
+  thumbnail   String
+  background  String?
+  rating      Float?
+  released    String?
+  createdAt   DateTime @default(now())
+}
