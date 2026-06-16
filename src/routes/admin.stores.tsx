@@ -1,4 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { Store } from "lucide-react";
+import { AdminGuard } from "@/components/admin/admin-guard";
+import { AdminSidebar } from "@/components/admin/admin-sidebar";
 
 export const Route = createFileRoute("/admin/stores")({
   component: StoresAdminPage,
@@ -6,14 +9,27 @@ export const Route = createFileRoute("/admin/stores")({
 
 function StoresAdminPage() {
   return (
-    <div>
-      <h1 className="text-3xl font-bold text-white mb-4">
-        Manage Stores
-      </h1>
+    <AdminGuard>
+      <div className="flex min-h-screen bg-black text-white">
+        <AdminSidebar />
 
-      <div className="rounded-xl border border-white/10 bg-white/5 p-6">
-        Stores management panel
+        <main className="flex-1 p-6">
+          <h1 className="mb-6 flex items-center gap-3 text-3xl font-bold">
+            <Store className="h-8 w-8 text-[color:var(--neon)]" />
+            Manage Stores
+          </h1>
+
+          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+            <h2 className="mb-2 text-xl font-semibold">
+              Store Management
+            </h2>
+
+            <p className="text-muted-foreground">
+              Manage game stores, logos, affiliate links, and store information.
+            </p>
+          </div>
+        </main>
       </div>
-    </div>
+    </AdminGuard>
   );
 }

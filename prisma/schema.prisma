@@ -12,6 +12,8 @@ model Admin {
   password  String
   name      String?
   createdAt DateTime @default(now())
+
+  sessions AdminSession[]
 }
 
 model User {
@@ -98,4 +100,14 @@ model CachedGame {
   rating      Float?
   released    String?
   createdAt   DateTime @default(now())
+}
+
+model AdminSession {
+  id        String   @id @default(cuid())
+  adminId   String
+  token     String   @unique
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  admin Admin @relation(fields: [adminId], references: [id], onDelete: Cascade)
 }
